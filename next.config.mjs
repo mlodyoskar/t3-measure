@@ -19,7 +19,7 @@ const config = {
     return config
   },
   images: {
-    domains: ["i.pravatar.cc"],
+    domains: ["cdn.discordapp.com"],
   },
 
   /**
