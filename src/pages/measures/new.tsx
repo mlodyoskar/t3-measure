@@ -5,21 +5,23 @@ import { Input } from "../../components/forms/Input";
 import { Button } from "../../components/ui/Button";
 
 const CreateMeasure = z.object({
-  name: z.string().min(1),
+  name: z.string(),
 });
 
 const NewMeasurePage = () => {
   const form = useZodForm({ schema: CreateMeasure });
   return (
-    <div className="flex max-w-4xl items-center bg-gray-200">
+    <div>
       <Form
         form={form}
         onSubmit={(data) => {
           console.log(data);
         }}
       >
-        <Input label="Name" {...form.register("name")} />
-        <Button type="submit">Dodaj nowy pomiar</Button>
+        <div className="flex flex-col gap-4">
+          <Input label="Name" {...form.register("name")} />
+          <Button type="submit">Dodaj nowy pomiar</Button>
+        </div>
       </Form>
     </div>
   );

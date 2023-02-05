@@ -1,5 +1,5 @@
-import HamburgerIcon from "../../icons/Hamburger.svg";
-import XMarkIcon from "../../icons/XMark.svg";
+/* eslint-disable @typescript-eslint/no-misused-promises */
+import { HamburgerIcon, XMarkIcon } from "./icons";
 import React, { Fragment, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import clsx from "clsx";
@@ -8,13 +8,14 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 
-const userNavigation = [{ name: "Wyloguj się", onClick: () => signOut() }];
+const userNavigation = [
+  { name: "Wyloguj się", onClick: async () => await signOut() },
+];
 
 const sidebarItems = [
   {
     name: "Pomiary",
-    href: "/statistics",
-    icon: "",
+    href: "/",
   },
 ];
 interface Props {
@@ -81,11 +82,7 @@ export const Sidebar = ({ children }: Props) => {
                     </div>
                   </Transition.Child>
                   <div className="flex flex-shrink-0 items-center px-4">
-                    <img
-                      className="h-8 w-auto"
-                      src="https://tailwindui.com/img/logos/mark.svg?color=blue&shade=600"
-                      alt="Your Company"
-                    />
+                    <h1 className="text-xl">Measure 💪</h1>
                   </div>
                   <div className="mt-5 h-0 flex-1 overflow-y-auto">
                     <nav className="space-y-1 px-2">
@@ -99,12 +96,12 @@ export const Sidebar = ({ children }: Props) => {
                             href={item.href}
                             className={clsx(
                               isActive
-                                ? "bg-blue-600 text-white hover:bg-blue-700"
+                                ? "bg-emerald-600 text-white hover:bg-emerald-700"
                                 : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
                               "group flex items-center rounded-md px-2 py-2 text-base font-medium"
                             )}
                           >
-                            <item.icon
+                            {/* <item.icon
                               className={clsx(
                                 isActive
                                   ? "text-white"
@@ -112,7 +109,7 @@ export const Sidebar = ({ children }: Props) => {
                                 "mr-4 h-6 w-6 flex-shrink-0"
                               )}
                               aria-hidden="true"
-                            />
+                            /> */}
                             {item.name}
                           </Link>
                         );
@@ -131,11 +128,7 @@ export const Sidebar = ({ children }: Props) => {
         <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
           <div className="flex flex-grow flex-col overflow-y-auto border-r border-gray-200 bg-white pt-5">
             <div className="flex flex-shrink-0 items-center px-4">
-              <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=blue&shade=600"
-                alt="Your Company"
-              />
+              <h1 className="text-xl text-gray-800">Measure 💪</h1>
             </div>
             <div className="mt-5 flex flex-grow flex-col">
               <nav className="flex-1 space-y-1 px-2 pb-4">
@@ -148,12 +141,12 @@ export const Sidebar = ({ children }: Props) => {
                       href={item.href}
                       className={clsx(
                         isActive
-                          ? "bg-blue-600 text-white hover:bg-blue-700"
+                          ? "bg-emerald-600 text-white hover:bg-emerald-700"
                           : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
                         "group flex items-center rounded-md px-2 py-2 text-sm font-medium"
                       )}
                     >
-                      <item.icon
+                      {/* <item.icon
                         className={clsx(
                           isActive
                             ? "text-white"
@@ -161,7 +154,7 @@ export const Sidebar = ({ children }: Props) => {
                           "mr-3 h-6 w-6 flex-shrink-0"
                         )}
                         aria-hidden="true"
-                      />
+                      /> */}
                       {item.name}
                     </Link>
                   );
@@ -174,7 +167,7 @@ export const Sidebar = ({ children }: Props) => {
           <div className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
             <button
               type="button"
-              className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 md:hidden"
+              className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500 md:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
@@ -186,7 +179,7 @@ export const Sidebar = ({ children }: Props) => {
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
                       <Image
                         width={100}

@@ -9,6 +9,18 @@
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      use: ['@svgr/webpack'],
+    })
+
+    return config
+  },
+  images: {
+    domains: ["i.pravatar.cc"],
+  },
 
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you

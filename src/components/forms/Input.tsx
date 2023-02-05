@@ -22,7 +22,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(
             type={type}
             placeholder={placeholder}
             className={clsx(
-              "mt-1 w-full rounded-lg border-gray-200 p-2.5 text-sm shadow-sm",
+              "mt-1 w-full rounded-lg border border-gray-300 p-2.5 text-sm shadow-sm",
               {
                 "border border-red-500 bg-red-50 text-red-900 placeholder-red-500 focus:border-red-500 focus:ring-red-500":
                   state.error,
