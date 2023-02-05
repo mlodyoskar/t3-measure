@@ -1,11 +1,13 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, signIn } from "next-auth/react";
 
 import { api } from "../utils/api";
 
 import "../styles/globals.css";
 import { Sidebar } from "../components/ui/Sidebar";
+import { Button } from "../components/ui/Button";
+import { ProtectedWrapper } from "../components/ProtectedWrapper";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -13,9 +15,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Sidebar>
-        <Component {...pageProps} />
-      </Sidebar>
+      <ProtectedWrapper>
+        <Sidebar>
+          <Component {...pageProps} />
+        </Sidebar>
+      </ProtectedWrapper>
     </SessionProvider>
   );
 };

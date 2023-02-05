@@ -3,6 +3,7 @@ import Form from "../../components/forms/Form";
 import { useZodForm } from "../../utils/useZodForm";
 import { Input } from "../../components/forms/Input";
 import { Button } from "../../components/ui/Button";
+import { signIn, useSession } from "next-auth/react";
 
 const CreateMeasure = z.object({
   name: z.string(),
@@ -10,8 +11,11 @@ const CreateMeasure = z.object({
 
 const NewMeasurePage = () => {
   const form = useZodForm({ schema: CreateMeasure });
+  const session = useSession();
+  console.log(session);
   return (
     <div>
+      <Button onClick={signIn}>ZALOGUJ</Button>
       <Form
         form={form}
         onSubmit={(data) => {
