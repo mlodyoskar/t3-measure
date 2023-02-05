@@ -5,7 +5,7 @@ import { Dialog, Menu, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 
 const userNavigation = [
@@ -25,6 +25,7 @@ interface Props {
 export const Sidebar = ({ children }: Props) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
+  const { data: session } = useSession();
 
   return (
     <>
@@ -185,8 +186,8 @@ export const Sidebar = ({ children }: Props) => {
                         width={100}
                         height={100}
                         className="h-8 w-8 rounded-full"
-                        src="https://i.pravatar.cc/300"
-                        alt=""
+                        src={session?.user.image || "/images/avatar.png"}
+                        alt={`Avatar użytkownika ${session?.user.name || ""}`}
                       />
                     </Menu.Button>
                   </div>
