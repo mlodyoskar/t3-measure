@@ -14,8 +14,8 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(
     const state = form.getFieldState(props.name);
 
     return (
-      <>
-        <label className="block text-sm text-gray-600">
+      <div className="w-full">
+        <label className="block w-full text-sm text-gray-600">
           {label}
           <input
             {...props}
@@ -36,7 +36,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(
             {state.error.message}
           </p>
         )}
-      </>
+      </div>
     );
   }
 );

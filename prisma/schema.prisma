@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -20,6 +17,35 @@ model Example {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+model Measure {
+    id          String        @id @default(cuid())
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    MeasureItem MeasureItem[]
+    User        User          @relation(fields: [userId], references: [id])
+    userId      String
+}
+
+model MeasureItem {
+    id             String       @id @default(cuid())
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @updatedAt
+    MeasureField   MeasureField @relation(fields: [measureFieldId], references: [id])
+    value          Float
+    Measure        Measure?     @relation(fields: [measureId], references: [id])
+    measureId      String?
+    measureFieldId String
+}
+
+model MeasureField {
+    id          String        @id @default(cuid())
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    name        String
+    displayName String
+    MeasureItem MeasureItem[]
 }
 
 // Necessary for Next auth
@@ -57,6 +83,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    Measure       Measure[]
 }
 
 model VerificationToken {
