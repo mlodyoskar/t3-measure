@@ -43,7 +43,7 @@ model MeasureField {
     id          String        @id @default(cuid())
     createdAt   DateTime      @default(now())
     updatedAt   DateTime      @updatedAt
-    name        String
+    name        String        @unique
     displayName String
     MeasureItem MeasureItem[]
 }

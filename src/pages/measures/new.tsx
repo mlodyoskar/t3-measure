@@ -3,11 +3,12 @@ import Form from "../../components/forms/Form";
 import { useZodForm } from "../../utils/useZodForm";
 import { Input } from "../../components/forms/Input";
 import { Button } from "../../components/ui/Button";
+import { api } from "../../utils/api";
 
 const positiveDecimalRegex = /^\d+(\.\d{1})?$/;
 const MEASURE_FIELD_ERROR_MESSAGE = "Wartość musi być liczbą dodatnią";
 
-const formFieldNames = [
+export const formFieldNames = [
   {
     name: "calf",
     displayName: "Łydka",
@@ -21,13 +22,12 @@ const formFieldNames = [
     displayName: "Kark",
   },
   {
-    name: "neck",
-    displayName: "Kark",
-  },
-
-  {
     name: "chest",
     displayName: "Klatka piersiowa",
+  },
+  {
+    name: "waist",
+    displayName: "Pas",
   },
   {
     name: "biceps",
@@ -35,19 +35,22 @@ const formFieldNames = [
   },
 ] as const;
 
-const CreateMeasure = z.object({
+export type FormFieldNames = (typeof formFieldNames)[number]["name"];
+
+export const CreateMeasure = z.object({
   date: z.date(),
   weight: z.string(),
   neck: z.string().regex(positiveDecimalRegex, MEASURE_FIELD_ERROR_MESSAGE),
   tigh: z.string().regex(positiveDecimalRegex, MEASURE_FIELD_ERROR_MESSAGE),
   calf: z.string().regex(positiveDecimalRegex, MEASURE_FIELD_ERROR_MESSAGE),
+  waist: z.string().regex(positiveDecimalRegex, MEASURE_FIELD_ERROR_MESSAGE),
   chest: z.string().regex(positiveDecimalRegex, MEASURE_FIELD_ERROR_MESSAGE),
   biceps: z.string().regex(positiveDecimalRegex, MEASURE_FIELD_ERROR_MESSAGE),
 });
 
 const NewMeasurePage = () => {
   const form = useZodForm({ schema: CreateMeasure });
-  // const x = api.measure.create.useMutation({});
+  const { mutate } = api.measure.create.useMutation();
   const todaysDate = new Date().toISOString().slice(0, 10);
 
   return (
@@ -55,8 +58,9 @@ const NewMeasurePage = () => {
       <Form
         form={form}
         onSubmit={(data) => {
-          console.log(data);
-          // x.mutate({ text: "ASD" });
+          console.log(data.date.toISOString());
+          const res = mutate(data);
+          console.log(res);
         }}
       >
         <div className="flex flex-col gap-4">
@@ -77,7 +81,7 @@ const NewMeasurePage = () => {
           </div>
           <div className="h-[1px] w-full rounded-lg bg-gray-200"></div>
 
-          <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2  sm:flex-row">
+          <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-3  sm:flex-row">
             {formFieldNames.map(({ name, displayName }) => {
               return (
                 <Input
