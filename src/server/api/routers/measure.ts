@@ -5,6 +5,31 @@ import type { FormFieldNames } from "../../../pages/measures/new";
 import { CreateMeasure, formFieldNames } from "../../../pages/measures/new";
 
 export const measureRouter = createTRPCRouter({
+  getAll: protectedProcedure.query(async ({ ctx }) => {
+    const allMeasurements = await ctx.prisma.measure.findMany({
+      where: { userId: ctx.session.user.id },
+      select: {
+        id: true,
+        createdAt: true,
+        MeasureItem: {
+          select: {
+            value: true,
+            MeasureField: { select: { name: true, displayName: true } },
+          },
+        },
+      },
+    });
+
+    return allMeasurements.map(({ id, createdAt, MeasureItem }) => {
+      return {
+        id,
+        createdAt,
+        measurements: MeasureItem.reduce((acc, { value, MeasureField }) => {
+          return { ...acc, [MeasureField.name]: value };
+        }, {}),
+      };
+    });
+  }),
   create: protectedProcedure
     .input(CreateMeasure)
     .mutation(async ({ ctx, input: { date, ...input } }) => {
