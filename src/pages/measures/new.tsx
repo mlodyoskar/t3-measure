@@ -62,7 +62,7 @@ const NewMeasurePage = () => {
         onSubmit={(data) => {
           mutate(data, {
             onSuccess: () => {
-              router.push("/");
+              void router.push("/");
             },
           });
         }}
