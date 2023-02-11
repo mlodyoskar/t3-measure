@@ -23,6 +23,7 @@ model Measure {
     id          String        @id @default(cuid())
     createdAt   DateTime      @default(now())
     updatedAt   DateTime      @updatedAt
+    weight      Float
     MeasureItem MeasureItem[]
     User        User          @relation(fields: [userId], references: [id])
     userId      String
@@ -34,7 +35,7 @@ model MeasureItem {
     updatedAt      DateTime     @updatedAt
     MeasureField   MeasureField @relation(fields: [measureFieldId], references: [id])
     value          Float
-    Measure        Measure?     @relation(fields: [measureId], references: [id])
+    Measure        Measure?     @relation(fields: [measureId], references: [id], onDelete: Cascade)
     measureId      String?
     measureFieldId String
 }

@@ -4,6 +4,7 @@ import { useZodForm } from "../../utils/useZodForm";
 import { Input } from "../../components/forms/Input";
 import { Button } from "../../components/ui/Button";
 import { api } from "../../utils/api";
+import { useRouter } from "next/router";
 
 const positiveDecimalRegex = /^\d+(\.\d{1})?$/;
 const MEASURE_FIELD_ERROR_MESSAGE = "Wartość musi być liczbą dodatnią";
@@ -14,7 +15,7 @@ export const formFieldNames = [
     displayName: "Łydka",
   },
   {
-    name: "tigh",
+    name: "thigh",
     displayName: "Udo",
   },
   {
@@ -41,7 +42,7 @@ export const CreateMeasure = z.object({
   date: z.date(),
   weight: z.string(),
   neck: z.string().regex(positiveDecimalRegex, MEASURE_FIELD_ERROR_MESSAGE),
-  tigh: z.string().regex(positiveDecimalRegex, MEASURE_FIELD_ERROR_MESSAGE),
+  thigh: z.string().regex(positiveDecimalRegex, MEASURE_FIELD_ERROR_MESSAGE),
   calf: z.string().regex(positiveDecimalRegex, MEASURE_FIELD_ERROR_MESSAGE),
   waist: z.string().regex(positiveDecimalRegex, MEASURE_FIELD_ERROR_MESSAGE),
   chest: z.string().regex(positiveDecimalRegex, MEASURE_FIELD_ERROR_MESSAGE),
@@ -50,17 +51,20 @@ export const CreateMeasure = z.object({
 
 const NewMeasurePage = () => {
   const form = useZodForm({ schema: CreateMeasure });
-  const { mutate } = api.measure.create.useMutation();
+  const { mutate, isLoading } = api.measure.create.useMutation();
   const todaysDate = new Date().toISOString().slice(0, 10);
+  const router = useRouter();
 
   return (
     <div>
       <Form
         form={form}
         onSubmit={(data) => {
-          console.log(data.date.toISOString());
-          const res = mutate(data);
-          console.log(res);
+          mutate(data, {
+            onSuccess: () => {
+              router.push("/");
+            },
+          });
         }}
       >
         <div className="flex flex-col gap-4">
@@ -95,7 +99,7 @@ const NewMeasurePage = () => {
               );
             })}
           </div>
-          <Button type="submit">Dodaj nowy pomiar</Button>
+          <Button type="submit">Dodaj nowy pomiar {isLoading}</Button>
         </div>
       </Form>
     </div>

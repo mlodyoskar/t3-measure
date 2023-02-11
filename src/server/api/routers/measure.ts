@@ -1,16 +1,24 @@
+import { TRPCError } from "@trpc/server";
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import type { FormFieldNames } from "../../../pages/measures/new";
 import { CreateMeasure, formFieldNames } from "../../../pages/measures/new";
 
+const isMeasureField = (fieldName: string): fieldName is FormFieldNames => {
+  const keys = formFieldNames.map(({ name }) => name);
+  return keys.includes(fieldName as FormFieldNames);
+};
+
 export const measureRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
     const allMeasurements = await ctx.prisma.measure.findMany({
       where: { userId: ctx.session.user.id },
+      orderBy: { createdAt: "desc" },
       select: {
         id: true,
         createdAt: true,
+        weight: true,
         MeasureItem: {
           select: {
             value: true,
@@ -20,32 +28,35 @@ export const measureRouter = createTRPCRouter({
       },
     });
 
-    return allMeasurements.map(({ id, createdAt, MeasureItem }) => {
+    return allMeasurements.map(({ id, createdAt, weight, MeasureItem }) => {
       return {
         id,
         createdAt,
-        measurements: MeasureItem.reduce((acc, { value, MeasureField }) => {
-          return { ...acc, [MeasureField.name]: value };
-        }, {}),
+        weight,
+        measurements: MeasureItem.reduce<Record<string, string | number>>(
+          (acc, { value, MeasureField }) => {
+            return { ...acc, [MeasureField.name]: value };
+          },
+          {}
+        ),
       };
     });
   }),
   create: protectedProcedure
     .input(CreateMeasure)
-    .mutation(async ({ ctx, input: { date, ...input } }) => {
-      console.log(input);
+    .mutation(async ({ ctx, input: { date, weight, ...input } }) => {
       try {
-        const isMeasureField = (
-          fieldName: string
-        ): fieldName is FormFieldNames => {
-          const keys = formFieldNames.map(({ name }) => name);
-          return keys.includes(fieldName as FormFieldNames);
-        };
-
         const fieldsNameAndId = await ctx.prisma.measureField.findMany({
           where: { name: { in: Object.keys(input) } },
           select: { id: true, name: true },
         });
+
+        if (fieldsNameAndId.length <= 0) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "No fields found in db",
+          });
+        }
 
         const fieldsWithIdAndValue = fieldsNameAndId.reduce<
           { measureFieldId: string; value: number }[]
@@ -66,6 +77,7 @@ export const measureRouter = createTRPCRouter({
           data: {
             User: { connect: { id: ctx.session.user.id } },
             createdAt: date,
+            weight: Number(weight),
             MeasureItem: {
               createMany: {
                 data: fieldsWithIdAndValue,
