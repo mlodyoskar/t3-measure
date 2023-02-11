@@ -5,6 +5,9 @@ import { api } from "../utils/api";
 import "../styles/globals.css";
 import { Sidebar } from "../components/ui/Sidebar";
 import { ProtectedWrapper } from "../components/ProtectedWrapper";
+import { Inter } from "@next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -12,11 +15,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <ProtectedWrapper>
-        <Sidebar>
-          <Component {...pageProps} />
-        </Sidebar>
-      </ProtectedWrapper>
+      <main className={inter.className}>
+        <ProtectedWrapper>
+          <Sidebar>
+            <Component {...pageProps} />
+          </Sidebar>
+        </ProtectedWrapper>
+      </main>
     </SessionProvider>
   );
 };
