@@ -19,11 +19,21 @@ model Example {
     updatedAt DateTime @updatedAt
 }
 
+enum Feeling {
+    worst
+    neutral
+    good
+    happy
+    best
+}
+
 model Measure {
     id          String        @id @default(cuid())
     createdAt   DateTime      @default(now())
     updatedAt   DateTime      @updatedAt
     weight      Float
+    note        String?
+    feeling     Feeling       @default(best)
     MeasureItem MeasureItem[]
     User        User          @relation(fields: [userId], references: [id])
     userId      String

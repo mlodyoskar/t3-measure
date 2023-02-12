@@ -44,50 +44,54 @@ export const measureRouter = createTRPCRouter({
   }),
   create: protectedProcedure
     .input(CreateMeasure)
-    .mutation(async ({ ctx, input: { date, weight, ...input } }) => {
-      try {
-        const fieldsNameAndId = await ctx.prisma.measureField.findMany({
-          where: { name: { in: Object.keys(input) } },
-          select: { id: true, name: true },
-        });
-
-        if (fieldsNameAndId.length <= 0) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "No fields found in db",
+    .mutation(
+      async ({ ctx, input: { date, weight, note, feeling, ...input } }) => {
+        try {
+          const fieldsNameAndId = await ctx.prisma.measureField.findMany({
+            where: { name: { in: Object.keys(input) } },
+            select: { id: true, name: true },
           });
-        }
 
-        const fieldsWithIdAndValue = fieldsNameAndId.reduce<
-          { measureFieldId: string; value: number }[]
-        >((acc, { id, name }) => {
-          if (isMeasureField(name)) {
-            return [
-              ...acc,
-              {
-                measureFieldId: id,
-                value: Number(input[name]),
-              },
-            ];
+          if (fieldsNameAndId.length <= 0) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "No fields found in db",
+            });
           }
-          return acc;
-        }, []);
 
-        return await ctx.prisma.measure.create({
-          data: {
-            User: { connect: { id: ctx.session.user.id } },
-            createdAt: date,
-            weight: Number(weight),
-            MeasureItem: {
-              createMany: {
-                data: fieldsWithIdAndValue,
+          const fieldsWithIdAndValue = fieldsNameAndId.reduce<
+            { measureFieldId: string; value: number }[]
+          >((acc, { id, name }) => {
+            if (isMeasureField(name)) {
+              return [
+                ...acc,
+                {
+                  measureFieldId: id,
+                  value: Number(input[name]),
+                },
+              ];
+            }
+            return acc;
+          }, []);
+
+          return await ctx.prisma.measure.create({
+            data: {
+              User: { connect: { id: ctx.session.user.id } },
+              createdAt: date,
+              weight: Number(weight),
+              note,
+              feeling,
+              MeasureItem: {
+                createMany: {
+                  data: fieldsWithIdAndValue,
+                },
               },
             },
-          },
-        });
-      } catch (error) {
-        console.log(error);
-        return { error: error };
+          });
+        } catch (error) {
+          console.log(error);
+          return { error: error };
+        }
       }
-    }),
+    ),
 });
