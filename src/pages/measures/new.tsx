@@ -9,7 +9,7 @@ import { Textarea } from "../../components/forms/Textarea";
 import { Divider } from "../../components/ui/Divider";
 import { RadioGroup } from "@headlessui/react";
 import { Controller } from "react-hook-form";
-import { FileInput } from "../../components/ui/FileInput";
+import { Layout } from "../../components/ui/Layout";
 
 const positiveDecimalRegex = /^(?!0)\d+(\.\d{1})?$/;
 const MEASURE_FIELD_ERROR_MESSAGE = "Wartość musi być liczbą dodatnią";
@@ -80,7 +80,7 @@ const NewMeasurePage = () => {
   const router = useRouter();
 
   return (
-    <div>
+    <Layout title="Dodaj nowy pomiar">
       <Form
         form={form}
         onSubmit={(data) => {
@@ -163,7 +163,7 @@ const NewMeasurePage = () => {
           <Button type="submit">Dodaj nowy pomiar {isLoading}</Button>
         </div>
       </Form>
-    </div>
+    </Layout>
   );
 };
 
