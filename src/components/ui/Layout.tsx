@@ -9,7 +9,7 @@ export const Layout = ({ children, title }: Props) => {
   return (
     <>
       <Head>
-        <title>Measure {title && `| ${title}`}</title>
+        <title>{`Measure ${title ? `| ${title}` : ""}`}</title>
         <meta
           name="description"
           content="Measure your body to know if you are making progress!"
