@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import Head from "next/head";
 
 interface Props {
@@ -16,7 +17,13 @@ export const Layout = ({ children, title }: Props) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {children}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        {children}
+      </motion.div>
     </>
   );
 };

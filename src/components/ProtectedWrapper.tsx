@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useSession, signIn } from "next-auth/react";
-import React, { useEffect } from "react";
+import React from "react";
 import { DiscordIcon, Loader } from "./ui/icons";
-import { useRouter } from "next/router";
 import { Layout } from "./ui/Layout";
 
 export const ProtectedWrapper = ({
@@ -11,13 +10,6 @@ export const ProtectedWrapper = ({
   children: React.ReactNode;
 }) => {
   const { data: session, status } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!session) {
-      void router.push("/");
-    }
-  }, [router, session]);
 
   if (status === "loading") {
     return (

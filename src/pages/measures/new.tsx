@@ -10,8 +10,9 @@ import { Divider } from "../../components/ui/Divider";
 import { RadioGroup } from "@headlessui/react";
 import { Controller } from "react-hook-form";
 import { Layout } from "../../components/ui/Layout";
+import { log } from "console";
 
-const positiveDecimalRegex = /^(?!0)\d+(\.\d{1})?$/;
+const positiveDecimalRegex = /^(?!0)\d+(\.\d{1})?(\,\d{1})?$/;
 const MEASURE_FIELD_ERROR_MESSAGE = "Wartość musi być liczbą dodatnią";
 
 export const formFieldNames = [
@@ -74,11 +75,12 @@ const feelings = [
 ] as const;
 
 const NewMeasurePage = () => {
-  const form = useZodForm({ schema: CreateMeasure });
+  const form = useZodForm({ schema: CreateMeasure, mode: "onBlur" });
   const { mutate, isLoading } = api.measure.create.useMutation();
   const todaysDate = new Date().toISOString().slice(0, 10);
   const router = useRouter();
 
+  console.log(form.formState.errors);
   return (
     <Layout title="Dodaj nowy pomiar">
       <Form
@@ -147,7 +149,7 @@ const NewMeasurePage = () => {
                       ? " border border-emerald-600"
                       : "border border-gray-300 bg-white"
                   }
-                    relative flex cursor-pointer rounded-md px-4 py-3 shadow-sm focus:outline-none`
+                    relative flex cursor-pointer rounded-md px-4 py-3 shadow-sm transition-colors focus:outline-none`
                         }
                       >
                         <div className="flex w-full items-center justify-between">
@@ -160,7 +162,9 @@ const NewMeasurePage = () => {
               </div>
             )}
           />
-          <Button type="submit">Dodaj nowy pomiar {isLoading}</Button>
+          <Button isLoading={isLoading} type="submit">
+            Dodaj nowy pomiar
+          </Button>
         </div>
       </Form>
     </Layout>

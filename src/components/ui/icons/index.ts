@@ -5,6 +5,7 @@ import Loader from "./Loader.svg";
 import ThreeDotsIcon from "./ThreeDots.svg";
 import EditIcon from "./Edit.svg";
 import PhotoIcon from "./Photo.svg";
+import Spinner from "./Spinner.svg";
 
 export {
   HamburgerIcon,
@@ -14,4 +15,5 @@ export {
   ThreeDotsIcon,
   EditIcon,
   PhotoIcon,
+  Spinner,
 };

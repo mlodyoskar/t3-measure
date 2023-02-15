@@ -32,9 +32,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, Props>(
           />
         </label>
         {state.error && (
-          <p className="mt-1 text-xs text-red-600 dark:text-red-500">
-            {state.error.message}
-          </p>
+          <p className="mt-1 text-xs text-red-600 ">{state.error.message}</p>
         )}
       </div>
     );

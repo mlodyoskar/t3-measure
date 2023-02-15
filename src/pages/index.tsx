@@ -3,13 +3,19 @@ import { ButtonLink } from "../components/ui/ButtonLink";
 import { api } from "../utils/api";
 import Link from "next/link";
 import { Layout } from "../components/ui/Layout";
+import { Loader, Spinner } from "../components/ui/icons";
 
 const Home: NextPage = () => {
   const { data } = api.measure.getAll.useQuery();
-  console.log(data);
 
   if (!data) {
-    return <div>Loading...</div>;
+    return (
+      <Layout>
+        <div className="m-auto">
+          <Spinner className="fill-emerald-500" />
+        </div>
+      </Layout>
+    );
   }
 
   return (
