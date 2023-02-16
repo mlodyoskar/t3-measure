@@ -9,6 +9,15 @@
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  redirects: async () => {
+    return [
+      {
+        source: '/',
+        destination: '/measures',
+        permanent: false,
+      },
+    ]
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,

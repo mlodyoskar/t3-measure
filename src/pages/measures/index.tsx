@@ -1,9 +1,9 @@
 import { type NextPage } from "next";
-import { ButtonLink } from "../components/ui/ButtonLink";
-import { api } from "../utils/api";
+import { ButtonLink } from "../../components/ui/ButtonLink";
+import { api } from "../../utils/api";
 import Link from "next/link";
-import { Layout } from "../components/ui/Layout";
-import { Loader, Spinner } from "../components/ui/icons";
+import { Layout } from "../../components/ui/Layout";
+import { Loader, Spinner } from "../../components/ui/icons";
 
 const Home: NextPage = () => {
   const { data } = api.measure.getAll.useQuery();

@@ -11,6 +11,12 @@ const isMeasureField = (fieldName: string): fieldName is FormFieldNames => {
 };
 
 export const measureRouter = createTRPCRouter({
+  getAllFields: protectedProcedure.query(async ({ ctx }) => {
+    const fields = await ctx.prisma.measureField.findMany({
+      select: { id: true, displayName: true },
+    });
+    return fields;
+  }),
   getAll: protectedProcedure.query(async ({ ctx }) => {
     const allMeasurements = await ctx.prisma.measure.findMany({
       where: { userId: ctx.session.user.id },

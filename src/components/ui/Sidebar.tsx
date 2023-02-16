@@ -15,7 +15,11 @@ const userNavigation = [
 const sidebarItems = [
   {
     name: "Pomiary",
-    href: "/",
+    href: "/measures",
+  },
+  {
+    name: "Ustawienia pomiarów",
+    href: "/measures/settings",
   },
 ];
 interface Props {
@@ -88,7 +92,7 @@ export const Sidebar = ({ children }: Props) => {
                   <div className="mt-5 h-0 flex-1 overflow-y-auto">
                     <nav className="space-y-1 px-2">
                       {sidebarItems.map((item) => {
-                        const isActive = router.pathname.includes(item.href);
+                        const isActive = router.pathname === item.href;
 
                         return (
                           <Link
@@ -134,7 +138,7 @@ export const Sidebar = ({ children }: Props) => {
             <div className="mt-5 flex flex-grow flex-col">
               <nav className="flex-1 space-y-1 px-2 pb-4">
                 {sidebarItems.map((item) => {
-                  const isActive = router.pathname.includes(item.href);
+                  const isActive = router.pathname === item.href;
 
                   return (
                     <Link

@@ -80,7 +80,6 @@ const NewMeasurePage = () => {
   const todaysDate = new Date().toISOString().slice(0, 10);
   const router = useRouter();
 
-  console.log(form.formState.errors);
   return (
     <Layout title="Dodaj nowy pomiar">
       <Form
