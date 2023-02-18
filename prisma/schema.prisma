@@ -35,7 +35,7 @@ model Measure {
     note        String?
     feeling     Feeling       @default(best)
     MeasureItem MeasureItem[]
-    User        User          @relation(fields: [userId], references: [id])
+    User        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId      String
 }
 
@@ -48,15 +48,31 @@ model MeasureItem {
     Measure        Measure?     @relation(fields: [measureId], references: [id], onDelete: Cascade)
     measureId      String?
     measureFieldId String
+
+    @@unique([measureId, measureFieldId])
 }
 
 model MeasureField {
-    id          String        @id @default(cuid())
-    createdAt   DateTime      @default(now())
-    updatedAt   DateTime      @updatedAt
-    name        String        @unique
-    displayName String
-    MeasureItem MeasureItem[]
+    id                   String                @id @default(cuid())
+    createdAt            DateTime              @default(now())
+    updatedAt            DateTime              @updatedAt
+    name                 String                @unique
+    displayName          String
+    MeasureItem          MeasureItem[]
+    ChoosenMeasureFields ChoosenMeasureField[]
+}
+
+model ChoosenMeasureField {
+    id             String       @id @default(cuid())
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @updatedAt
+    MeasureField   MeasureField @relation(fields: [measureFieldId], references: [id])
+    measureFieldId String
+    User           User         @relation(fields: [userId], references: [id])
+    userId         String
+    choosen        Boolean      @default(false)
+
+    @@unique([measureFieldId, userId])
 }
 
 // Necessary for Next auth
@@ -87,14 +103,15 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    Measure       Measure[]
+    id                   String                @id @default(cuid())
+    name                 String?
+    email                String?               @unique
+    emailVerified        DateTime?
+    image                String?
+    accounts             Account[]
+    sessions             Session[]
+    Measure              Measure[]
+    ChoosenMeasureFields ChoosenMeasureField[]
 }
 
 model VerificationToken {

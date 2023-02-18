@@ -7,6 +7,7 @@ import { Loader, Spinner } from "../../components/ui/icons";
 
 const Home: NextPage = () => {
   const { data } = api.measure.getAll.useQuery();
+  console.log(data);
 
   if (!data) {
     return (
@@ -37,7 +38,15 @@ const Home: NextPage = () => {
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Waga
                 </th>
-                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                {data.headers.map(({ displayName, name }) => (
+                  <th
+                    key={name}
+                    className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900"
+                  >
+                    {displayName}
+                  </th>
+                ))}
+                {/* <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Klatka
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
@@ -55,46 +64,39 @@ const Home: NextPage = () => {
                 </th>
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Szyja
-                </th>
+                </th> */}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {data.map(({ id, weight, createdAt, measurements }) => (
-                <tr className="h-12 sm:h-10" key={id}>
-                  <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {createdAt.toLocaleDateString("pl")}
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {weight}kg
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {measurements.chest}cm
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {measurements.waist}cm
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {measurements.biceps}cm
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {measurements.thigh}cm
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {measurements.calf}cm
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    {measurements.neck}cm
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-                    <Link
-                      className="text-sm text-gray-800 underline"
-                      href={`measures/${id}`}
-                    >
-                      Szczegóły
-                    </Link>
-                  </td>
-                </tr>
-              ))}
+              {data.measurements.map(
+                ({ id, weight, createdAt, measurements }) => (
+                  <tr className="h-12 sm:h-10" key={id}>
+                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                      {createdAt.toLocaleDateString("pl")}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                      {weight}kg
+                    </td>
+                    {Object.values(measurements).map((value, index) => (
+                      <td
+                        key={`${id}-${value}-${index}`}
+                        className="whitespace-nowrap px-4 py-2 text-gray-700"
+                      >
+                        {value}cm
+                      </td>
+                    ))}
+
+                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                      <Link
+                        className="text-sm text-gray-800 underline"
+                        href={`measures/${id}`}
+                      >
+                        Szczegóły
+                      </Link>
+                    </td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
         </div>

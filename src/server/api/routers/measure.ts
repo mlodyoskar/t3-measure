@@ -11,12 +11,6 @@ const isMeasureField = (fieldName: string): fieldName is FormFieldNames => {
 };
 
 export const measureRouter = createTRPCRouter({
-  getAllFields: protectedProcedure.query(async ({ ctx }) => {
-    const fields = await ctx.prisma.measureField.findMany({
-      select: { id: true, displayName: true },
-    });
-    return fields;
-  }),
   getAll: protectedProcedure.query(async ({ ctx }) => {
     const allMeasurements = await ctx.prisma.measure.findMany({
       where: { userId: ctx.session.user.id },
@@ -26,27 +20,44 @@ export const measureRouter = createTRPCRouter({
         createdAt: true,
         weight: true,
         MeasureItem: {
+          where: {
+            MeasureField: {
+              ChoosenMeasureFields: { every: { choosen: true } },
+            },
+          },
           select: {
             value: true,
-            MeasureField: { select: { name: true, displayName: true } },
+            MeasureField: {
+              select: { name: true, displayName: true },
+            },
           },
         },
       },
     });
 
-    return allMeasurements.map(({ id, createdAt, weight, MeasureItem }) => {
-      return {
-        id,
-        createdAt,
-        weight,
-        measurements: MeasureItem.reduce<Record<string, string | number>>(
-          (acc, { value, MeasureField }) => {
-            return { ...acc, [MeasureField.name]: value };
-          },
-          {}
-        ),
-      };
-    });
+    const measurements = allMeasurements.map(
+      ({ id, createdAt, weight, MeasureItem }) => {
+        return {
+          id,
+          createdAt,
+          weight,
+          measurements: MeasureItem.reduce<Record<string, string | number>>(
+            (acc, { value, MeasureField }) => {
+              return { ...acc, [MeasureField.name]: value };
+            },
+            {}
+          ),
+        };
+      }
+    );
+
+    const headers =
+      measurements[0] && Object.keys(measurements[0]?.measurements);
+
+    return {
+      headers: formFieldNames.filter(({ name }) => headers?.includes(name)),
+      measurements,
+    };
   }),
   create: protectedProcedure
     .input(CreateMeasure)
@@ -100,4 +111,20 @@ export const measureRouter = createTRPCRouter({
         }
       }
     ),
+  updateUserMeasureFields: protectedProcedure
+    .input(z.record(z.boolean()))
+    .mutation(({ ctx, input }) => {
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      Object.entries(input).forEach(async ([key, value]) => {
+        await ctx.prisma.choosenMeasureField.update({
+          data: { choosen: value },
+          where: {
+            measureFieldId_userId: {
+              userId: ctx.session.user.id,
+              measureFieldId: key,
+            },
+          },
+        });
+      });
+    }),
 });
