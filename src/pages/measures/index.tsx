@@ -7,7 +7,6 @@ import { Loader, Spinner } from "../../components/ui/icons";
 
 const Home: NextPage = () => {
   const { data } = api.measure.getAll.useQuery();
-  console.log(data);
 
   if (!data) {
     return (
@@ -18,7 +17,19 @@ const Home: NextPage = () => {
       </Layout>
     );
   }
-
+  if (data.measurements.length === 0) {
+    return (
+      <Layout>
+        <div className="mt-40 flex flex-col items-center justify-center">
+          <h2 className="text-2xl">Nie masz jeszcze żadnych pomiarów</h2>
+          <p>Dodaj pierwszy pomiar, aby zobaczyć go tutaj!</p>
+          <div className="mt-4 w-64">
+            <ButtonLink href="/measures/new">Dodaj pierwszy pomiar</ButtonLink>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
   return (
     <Layout title="Wszystkie pomiary">
       <main>
@@ -46,25 +57,6 @@ const Home: NextPage = () => {
                     {displayName}
                   </th>
                 ))}
-                {/* <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Klatka
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Pas
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Biceps
-                </th>
-
-                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Udo
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Łydka
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Szyja
-                </th> */}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">

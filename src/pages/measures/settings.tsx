@@ -1,18 +1,30 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Layout } from "../../components/ui/Layout";
 import { Toggle } from "../../components/forms/Toggle";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/ui/Button";
-import type { InferGetStaticPropsType } from "next";
 import { prisma } from "../../server/db";
 import { api } from "../../utils/api";
 import { useRouter } from "next/router";
+import { Spinner } from "../../components/ui/icons";
 
-const MeasureSettingsPage = ({
-  measureFields: data,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const MeasureSettingsPage = () => {
   const { register, handleSubmit } = useForm();
-  const { mutate } = api.measure.updateUserMeasureFields.useMutation();
+  const { mutate, isLoading } =
+    api.measure.updateUserMeasureFields.useMutation();
   const router = useRouter();
+  const utils = api.useContext();
+  const { data, isLoading: areFieldsLoading } =
+    api.measure.getUserMeasureFields.useQuery({
+      choosenFields: false,
+    });
+  if (areFieldsLoading) {
+    return (
+      <div>
+        <Spinner className="fill-emerald-500" />
+      </div>
+    );
+  }
 
   return (
     <Layout>
@@ -22,14 +34,17 @@ const MeasureSettingsPage = ({
         widoczne przy dodawaniu nowego pomiaru.
       </p>
       <form
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit((data) => {
-          mutate(data);
-          void router.push("/measures");
+          mutate(data, {
+            onSuccess: async () => {
+              void router.push("/measures");
+              await utils.measure.getUserMeasureFields.refetch();
+            },
+          });
         })}
         className="grid grid-cols-2 gap-4"
       >
-        {data?.map(({ MeasureField: { id, displayName }, choosen }) => (
+        {data?.map(({ id, displayName, choosen }) => (
           <Toggle
             key={id}
             label={displayName}
@@ -37,25 +52,11 @@ const MeasureSettingsPage = ({
           />
         ))}
         <div className="col-span-full">
-          <Button>Zapisz ustawienia</Button>
+          <Button isLoading={isLoading}>Zapisz ustawienia</Button>
         </div>
       </form>
     </Layout>
   );
-};
-
-export const getStaticProps = async () => {
-  const measureFields = await prisma.choosenMeasureField.findMany({
-    orderBy: { MeasureField: { displayName: "asc" } },
-    select: {
-      choosen: true,
-      MeasureField: { select: { id: true, displayName: true } },
-    },
-  });
-
-  return {
-    props: { measureFields },
-  };
 };
 
 export default MeasureSettingsPage;

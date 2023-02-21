@@ -113,18 +113,39 @@ export const measureRouter = createTRPCRouter({
     ),
   updateUserMeasureFields: protectedProcedure
     .input(z.record(z.boolean()))
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      Object.entries(input).forEach(async ([key, value]) => {
-        await ctx.prisma.choosenMeasureField.update({
-          data: { choosen: value },
-          where: {
-            measureFieldId_userId: {
-              userId: ctx.session.user.id,
-              measureFieldId: key,
+      await Promise.all(
+        Object.entries(input).map(async ([key, value]) => {
+          await ctx.prisma.choosenMeasureField.update({
+            data: { choosen: value },
+            where: {
+              measureFieldId_userId: {
+                userId: ctx.session.user.id,
+                measureFieldId: key,
+              },
             },
-          },
-        });
+          });
+        })
+      );
+    }),
+  getUserMeasureFields: protectedProcedure
+    .input(z.object({ choosenFields: z.boolean() }))
+    .query(async ({ ctx, input }) => {
+      const measureFields = await ctx.prisma.choosenMeasureField.findMany({
+        where: {
+          userId: ctx.session.user.id,
+          choosen: input.choosenFields ? true : undefined,
+        },
+        select: {
+          MeasureField: { select: { id: true, name: true, displayName: true } },
+          choosen: true,
+        },
       });
+
+      return measureFields.map(({ MeasureField, choosen }) => ({
+        ...MeasureField,
+        choosen,
+      }));
     }),
 });
