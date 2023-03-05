@@ -20,9 +20,11 @@ const Home: NextPage = () => {
   if (data.measurements.length === 0) {
     return (
       <Layout>
-        <div className="mt-40 flex flex-col items-center justify-center">
-          <h2 className="text-2xl">Nie masz jeszcze żadnych pomiarów</h2>
-          <p>Dodaj pierwszy pomiar, aby zobaczyć go tutaj!</p>
+        <div className="mt-16 flex flex-col items-center justify-center text-center">
+          <h2 className="mb-2  text-3xl">Nie masz jeszcze żadnych pomiarów!</h2>
+          <p className="text-md ">
+            Dodaj pierwszy pomiar, aby zobaczyć go tutaj!
+          </p>
           <div className="mt-4 w-64">
             <ButtonLink href="/measures/new">Dodaj pierwszy pomiar</ButtonLink>
           </div>

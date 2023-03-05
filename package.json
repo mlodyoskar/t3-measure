@@ -8,7 +8,8 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
-    "db-seed": "NODE_ENV=development prisma db seed"
+    "db-seed": "NODE_ENV=development prisma db seed",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.9",
@@ -32,6 +33,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.31.2",
     "@svgr/webpack": "^6.5.1",
     "@types/node": "^18.11.18",
     "@types/prettier": "^2.7.2",

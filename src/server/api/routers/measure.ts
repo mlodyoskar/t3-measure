@@ -2,13 +2,12 @@ import { TRPCError } from "@trpc/server";
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import type { FormFieldNames } from "../../../pages/measures/new";
-import { CreateMeasure, formFieldNames } from "../../../pages/measures/new";
+import { CreateMeasure } from "../../../pages/measures/new";
 
-const isMeasureField = (fieldName: string): fieldName is FormFieldNames => {
-  const keys = formFieldNames.map(({ name }) => name);
-  return keys.includes(fieldName as FormFieldNames);
-};
+// const isMeasureField = (fieldName: string): fieldName is FormFieldNames => {
+//   const keys = formFieldNames.map(({ name }) => name);
+//   return keys.includes(fieldName as FormFieldNames);
+// };
 
 export const measureRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
@@ -51,45 +50,26 @@ export const measureRouter = createTRPCRouter({
       }
     );
 
-    const headers =
-      measurements[0] && Object.keys(measurements[0]?.measurements);
+    const headers = allMeasurements[0]?.MeasureItem.map(
+      ({ MeasureField }) => MeasureField
+    );
 
     return {
-      headers: formFieldNames.filter(({ name }) => headers?.includes(name)),
+      headers,
       measurements,
     };
   }),
   create: protectedProcedure
     .input(CreateMeasure)
     .mutation(
-      async ({ ctx, input: { date, weight, note, feeling, ...input } }) => {
+      async ({ ctx, input: { date, weight, note, feeling, fields } }) => {
         try {
-          const fieldsNameAndId = await ctx.prisma.measureField.findMany({
-            where: { name: { in: Object.keys(input) } },
-            select: { id: true, name: true },
-          });
-
-          if (fieldsNameAndId.length <= 0) {
+          if (Object.keys(fields).length <= 0) {
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
               message: "No fields found in db",
             });
           }
-
-          const fieldsWithIdAndValue = fieldsNameAndId.reduce<
-            { measureFieldId: string; value: number }[]
-          >((acc, { id, name }) => {
-            if (isMeasureField(name)) {
-              return [
-                ...acc,
-                {
-                  measureFieldId: id,
-                  value: Number(input[name]),
-                },
-              ];
-            }
-            return acc;
-          }, []);
 
           return await ctx.prisma.measure.create({
             data: {
@@ -100,7 +80,10 @@ export const measureRouter = createTRPCRouter({
               feeling,
               MeasureItem: {
                 createMany: {
-                  data: fieldsWithIdAndValue,
+                  data: Object.entries(fields).map(([key, value]) => ({
+                    measureFieldId: key,
+                    value: Number(value),
+                  })),
                 },
               },
             },
