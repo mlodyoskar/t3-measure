@@ -51,7 +51,7 @@ const Home: NextPage = () => {
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Waga
                 </th>
-                {data.headers.map(({ displayName, name }) => (
+                {data.headers?.map(({ displayName, name }) => (
                   <th
                     key={name}
                     className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900"
