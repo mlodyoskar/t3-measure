@@ -25,6 +25,7 @@ export const Modal = ({
       <Dialog
         as="div"
         className="relative z-10"
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         onClose={shouldCloseOnOverlayClick ? onClose : () => {}}
       >
         <Transition.Child

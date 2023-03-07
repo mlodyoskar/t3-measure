@@ -8,10 +8,8 @@ import { useRouter } from "next/router";
 import { Textarea } from "../../components/forms/Textarea";
 import { Divider } from "../../components/ui/Divider";
 import { RadioGroup } from "@headlessui/react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { Layout } from "../../components/ui/Layout";
-import { log } from "console";
-import { prisma } from "../../server/db";
 import { Spinner } from "../../components/ui/icons";
 
 const positiveDecimalRegex = /^(?!0)\d+(\.\d{1})?(\,\d{1})?$/;

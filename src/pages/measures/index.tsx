@@ -4,7 +4,6 @@ import { api } from "../../utils/api";
 import Link from "next/link";
 import { Layout } from "../../components/ui/Layout";
 import { Spinner } from "../../components/ui/icons";
-import { Modal } from "../../components/ui/Modal";
 import { FirstLoginModal } from "../../components/modals/FirstLoginModal/FirstLoginModal";
 import { useState } from "react";
 import { Button } from "../../components/ui/Button";
