@@ -131,4 +131,13 @@ export const measureRouter = createTRPCRouter({
         choosen,
       }));
     }),
+  geAllMeasureFields: protectedProcedure.query(async ({ ctx }) => {
+    const measureFields = await ctx.prisma.measureField.findMany({});
+
+    return measureFields.map(({ id, name, displayName }) => ({
+      id,
+      name,
+      displayName,
+    }));
+  }),
 });

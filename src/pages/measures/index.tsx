@@ -3,10 +3,19 @@ import { ButtonLink } from "../../components/ui/ButtonLink";
 import { api } from "../../utils/api";
 import Link from "next/link";
 import { Layout } from "../../components/ui/Layout";
-import { Loader, Spinner } from "../../components/ui/icons";
+import { Spinner } from "../../components/ui/icons";
+import { Modal } from "../../components/ui/Modal";
+import { FirstLoginModal } from "../../components/modals/FirstLoginModal/FirstLoginModal";
+import { useState } from "react";
+import { Button } from "../../components/ui/Button";
 
 const Home: NextPage = () => {
   const { data } = api.measure.getAll.useQuery();
+  const [showModal, setShowModal] = useState(false);
+
+  const onClose = () => {
+    setShowModal(false);
+  };
 
   if (!data) {
     return (
@@ -21,12 +30,14 @@ const Home: NextPage = () => {
     return (
       <Layout>
         <div className="mt-16 flex flex-col items-center justify-center text-center">
+          <FirstLoginModal isOpen={showModal} closeHandler={onClose} />
           <h2 className="mb-2  text-3xl">Nie masz jeszcze żadnych pomiarów!</h2>
           <p className="text-md ">
             Dodaj pierwszy pomiar, aby zobaczyć go tutaj!
           </p>
           <div className="mt-4 w-64">
             <ButtonLink href="/measures/new">Dodaj pierwszy pomiar</ButtonLink>
+            <Button onClick={() => setShowModal(true)}>Pokaż modal</Button>
           </div>
         </div>
       </Layout>
@@ -35,6 +46,11 @@ const Home: NextPage = () => {
   return (
     <Layout title="Wszystkie pomiary">
       <main>
+        <Modal
+          isOpen={true}
+          title="Modal modalowy"
+          closeHandler={() => console.log("ZAMKINIJK")}
+        />
         <div className="flex justify-between">
           <h1 className="text-2xl text-gray-700">Wszystkie pomiary</h1>
           <div className="absolute inset-4 top-auto sm:static sm:inset-auto">

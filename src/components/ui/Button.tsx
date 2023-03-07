@@ -1,20 +1,36 @@
+import clsx from "clsx";
 import { Spinner } from "./icons";
 
-interface Props {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   type?: "button" | "submit" | "reset";
+  variant?: "primary";
   isLoading?: boolean;
   onClick?: () => unknown;
+  fullWidth?: boolean;
 }
 
-export const Button = ({ children, isLoading, ...props }: Props) => {
+const variants = {
+  primary:
+    "bg-emerald-600 text-white border-white focus:ring-emerald-300 hover:bg-emerald-800",
+} as const;
+
+export const Button = ({
+  children,
+  isLoading,
+  fullWidth,
+  variant = "primary",
+  ...props
+}: Props) => {
   return (
     <button
       {...props}
       disabled={isLoading}
-      className={`rounded-lg ${
-        isLoading ? "bg-emerald-800" : "bg-emerald-600"
-      }  w-full px-5 py-3.5 text-sm font-medium text-white transition-all hover:bg-emerald-800 focus:outline-none  focus:ring-4 focus:ring-emerald-300 sm:py-2.5`}
+      className={clsx(
+        variants[variant],
+        { "w-full": fullWidth },
+        "rounded-lg  px-5 py-3.5 text-sm font-medium transition-all focus:outline-none focus:ring-4  sm:py-2.5"
+      )}
     >
       {isLoading ? <Spinner className="mx-auto  fill-white" /> : children}
     </button>
