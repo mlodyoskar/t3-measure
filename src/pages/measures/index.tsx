@@ -46,9 +46,8 @@ const Home: NextPage = () => {
   return (
     <Layout title="Wszystkie pomiary">
       <main>
-        <Modal
+        <FirstLoginModal
           isOpen={true}
-          title="Modal modalowy"
           closeHandler={() => console.log("ZAMKINIJK")}
         />
         <div className="flex justify-between">
