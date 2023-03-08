@@ -27,6 +27,18 @@ async function main() {
         name: "biceps",
         displayName: "Biceps",
       },
+      {
+        name: "forearm",
+        displayName: "Przedramię",
+      },
+      {
+        name: "hips",
+        displayName: "Biodra",
+      },
+      {
+        name: "wrist",
+        displayName: "Nadgarstek",
+      },
     ],
   });
 }

@@ -52,7 +52,9 @@ const MeasureSettingsPage = () => {
           />
         ))}
         <div className="col-span-full">
-          <Button isLoading={isLoading}>Zapisz ustawienia</Button>
+          <Button fullWidth={true} isLoading={isLoading}>
+            Zapisz ustawienia
+          </Button>
         </div>
       </form>
     </Layout>

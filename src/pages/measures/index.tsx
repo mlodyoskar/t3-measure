@@ -29,7 +29,6 @@ const Home: NextPage = () => {
     return (
       <Layout>
         <div className="mt-16 flex flex-col items-center justify-center text-center">
-          <FirstLoginModal isOpen={showModal} closeHandler={onClose} />
           <h2 className="mb-2  text-3xl">Nie masz jeszcze żadnych pomiarów!</h2>
           <p className="text-md ">
             Dodaj pierwszy pomiar, aby zobaczyć go tutaj!
@@ -45,10 +44,6 @@ const Home: NextPage = () => {
   return (
     <Layout title="Wszystkie pomiary">
       <main>
-        <FirstLoginModal
-          isOpen={true}
-          closeHandler={() => console.log("ZAMKINIJK")}
-        />
         <div className="flex justify-between">
           <h1 className="text-2xl text-gray-700">Wszystkie pomiary</h1>
           <div className="absolute inset-4 top-auto sm:static sm:inset-auto">

@@ -8,6 +8,7 @@ import DiscordProvider from "next-auth/providers/discord";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "../env/server.mjs";
 import { prisma } from "./db";
+import { api } from "../utils/api.js";
 
 /**
  * Module augmentation for `next-auth` types.
@@ -38,6 +39,27 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  **/
 export const authOptions: NextAuthOptions = {
+  events: {
+    createUser: async ({ user }) => {
+      const allMeasureFields = await prisma.measureField.findMany({
+        select: { id: true },
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      await Promise.all(
+        allMeasureFields.map(async ({ id }) => {
+          await prisma.choosenMeasureField.create({
+            data: {
+              measureFieldId: id,
+              userId: user.id,
+              choosen: true,
+            },
+          });
+        })
+      );
+    },
+  },
+
   callbacks: {
     session({ session, user }) {
       if (session.user) {

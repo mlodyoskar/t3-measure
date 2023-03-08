@@ -94,6 +94,26 @@ export const measureRouter = createTRPCRouter({
         }
       }
     ),
+  createDefaultUserMeasureFields: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const allMeasureFields = await ctx.prisma.measureField.findMany({
+        select: { id: true },
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      await Promise.all(
+        allMeasureFields.map(async ({ id }) => {
+          await ctx.prisma.choosenMeasureField.create({
+            data: {
+              measureFieldId: id,
+              userId: input.userId,
+              choosen: true,
+            },
+          });
+        })
+      );
+    }),
   updateUserMeasureFields: protectedProcedure
     .input(z.record(z.boolean()))
     .mutation(async ({ ctx, input }) => {

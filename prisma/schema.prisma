@@ -68,7 +68,7 @@ model ChoosenMeasureField {
     updatedAt      DateTime     @updatedAt
     MeasureField   MeasureField @relation(fields: [measureFieldId], references: [id])
     measureFieldId String
-    User           User         @relation(fields: [userId], references: [id])
+    User           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId         String
     choosen        Boolean      @default(false)
 
