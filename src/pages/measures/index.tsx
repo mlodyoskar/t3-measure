@@ -4,17 +4,60 @@ import { api } from "../../utils/api";
 import Link from "next/link";
 import { Layout } from "../../components/ui/Layout";
 import { Spinner } from "../../components/ui/icons";
-import { FirstLoginModal } from "../../components/modals/FirstLoginModal/FirstLoginModal";
-import { useState } from "react";
-import { Button } from "../../components/ui/Button";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+interface MainChartProps {
+  weights: { weight: number; date: Date }[] | undefined;
+}
+
+const MainChart = ({ weights }: MainChartProps) => {
+  if (!weights) return null;
+
+  const labels = weights.map((w) => new Date(w.date).toLocaleDateString());
+  return (
+    <Line
+      data={{
+        labels,
+        datasets: [
+          {
+            label: "Waga w kg",
+            data: weights.map((w) => w.weight),
+            borderColor: "rgba(5, 150, 105, 1)",
+            backgroundColor: "rgba(5, 150, 105, 0.2)",
+          },
+        ],
+      }}
+    />
+  );
+};
 
 const Home: NextPage = () => {
   const { data } = api.measure.getAll.useQuery();
-  const [showModal, setShowModal] = useState(false);
-
-  const onClose = () => {
-    setShowModal(false);
-  };
+  const weightsData = data?.measurements
+    .map((m) => {
+      return { weight: m.weight, date: m.createdAt };
+    })
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   if (!data) {
     return (
@@ -35,7 +78,6 @@ const Home: NextPage = () => {
           </p>
           <div className="mt-4 w-64">
             <ButtonLink href="/measures/new">Dodaj pierwszy pomiar</ButtonLink>
-            <Button onClick={() => setShowModal(true)}>Pokaż modal</Button>
           </div>
         </div>
       </Layout>
@@ -50,6 +92,7 @@ const Home: NextPage = () => {
             <ButtonLink href="/measures/new">Dodaj nowy pomiar</ButtonLink>
           </div>
         </div>
+        <MainChart weights={weightsData} />
         <div className="-mx-4 mt-8 overflow-x-auto rounded-lg border border-gray-200 sm:mx-0">
           <table className="min-w-full divide-y-2 divide-gray-200 text-sm">
             <thead>

@@ -20,6 +20,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.47.1
   '@typescript-eslint/parser': ^5.47.1
   autoprefixer: ^10.4.7
+  chart.js: ^4.2.1
   clsx: ^1.2.1
   eslint: ^8.30.0
   eslint-config-next: 13.1.6
@@ -31,9 +32,11 @@ specifiers:
   prettier-plugin-tailwindcss: ^0.2.1
   prisma: ^4.9.0
   react: 18.2.0
+  react-chartjs-2: ^5.2.0
   react-dom: 18.2.0
   react-hook-form: ^7.43.0
   superjson: 1.9.1
+  tailwind-merge: ^1.12.0
   tailwindcss: ^3.2.0
   tsx: ^3.12.3
   typescript: ^4.9.4
@@ -50,14 +53,17 @@ dependencies:
   '@trpc/next': 10.10.0_ngwrfmgr4sjzncpabpxzk5etba
   '@trpc/react-query': 10.10.0_5mhyv2iryamqlilh5gtjpyz23q
   '@trpc/server': 10.10.0
+  chart.js: 4.2.1
   clsx: 1.2.1
   framer-motion: 9.0.3_biqbaboplfbrettd7655fr4n2y
   next: 13.1.6_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.19.2_3vryta7zmbcsw4rrqf4axjqggm
   react: 18.2.0
+  react-chartjs-2: 5.2.0_t5yjg6ab35jnsudnh2qdighszm
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.43.0_react@18.2.0
   superjson: 1.9.1
+  tailwind-merge: 1.12.0
   zod: 3.20.2
 
 devDependencies:
@@ -1675,6 +1681,10 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
+  /@kurkle/color/0.3.2:
+    resolution: {integrity: sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==}
+    dev: false
+
   /@motionone/animation/10.15.1:
     resolution: {integrity: sha512-mZcJxLjHor+bhcPuIFErMDNyrdb2vJur8lSfMCsuCB4UyV8ILZLvK+t+pg56erv8ud9xQGK/1OGPt10agPrCyQ==}
     dependencies:
@@ -2632,6 +2642,13 @@ packages:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
     dev: true
+
+  /chart.js/4.2.1:
+    resolution: {integrity: sha512-6YbpQ0nt3NovAgOzbkSSeeAQu/3za1319dPUQTXn9WcOpywM8rGKxJHrhS8V8xEkAlk8YhEfjbuAPfUyp6jIsw==}
+    engines: {pnpm: ^7.0.0}
+    dependencies:
+      '@kurkle/color': 0.3.2
+    dev: false
 
   /chokidar/3.5.3:
     resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
@@ -4520,6 +4537,16 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /react-chartjs-2/5.2.0_t5yjg6ab35jnsudnh2qdighszm:
+    resolution: {integrity: sha512-98iN5aguJyVSxp5U3CblRLH67J8gkfyGNbiK3c+l1QI/G4irHMPQw44aEPmjVag+YKTyQ260NcF82GTQ3bdscA==}
+    peerDependencies:
+      chart.js: ^4.1.1
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      chart.js: 4.2.1
+      react: 18.2.0
+    dev: false
+
   /react-dom/18.2.0_react@18.2.0:
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
@@ -4868,6 +4895,10 @@ packages:
       '@pkgr/utils': 2.3.1
       tslib: 2.5.0
     dev: true
+
+  /tailwind-merge/1.12.0:
+    resolution: {integrity: sha512-Y17eDp7FtN1+JJ4OY0Bqv9OA41O+MS8c1Iyr3T6JFLnOgLg3EvcyMKZAnQ8AGyvB5Nxm3t9Xb5Mhe139m8QT/g==}
+    dev: false
 
   /tailwindcss/3.2.4_postcss@8.4.21:
     resolution: {integrity: sha512-AhwtHCKMtR71JgeYDaswmZXhPcW9iuI9Sp2LvZPo9upDZ7231ZJ7eA9RaURbhpXGVlrjX4cFNlB4ieTetEb7hQ==}

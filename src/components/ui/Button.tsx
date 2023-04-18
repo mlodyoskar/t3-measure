@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { Spinner } from "./icons";
+import { twMerge } from "tailwind-merge";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -20,16 +21,20 @@ export const Button = ({
   isLoading,
   fullWidth,
   variant = "primary",
+  className,
   ...props
 }: Props) => {
   return (
     <button
       {...props}
       disabled={isLoading}
-      className={clsx(
-        variants[variant],
-        { "w-full": fullWidth },
-        "rounded-lg  px-5 py-3.5 text-sm font-medium transition-all focus:outline-none focus:ring-4  sm:py-2.5"
+      className={twMerge(
+        clsx(
+          variants[variant],
+          { "w-full": fullWidth },
+          "flex items-center justify-center rounded-lg px-5 py-3.5 text-sm font-medium transition-all focus:outline-none focus:ring-4  sm:py-2.5",
+          className
+        )
       )}
     >
       {isLoading ? <Spinner className="mx-auto  fill-white" /> : children}

@@ -59,6 +59,16 @@ export const measureRouter = createTRPCRouter({
       measurements,
     };
   }),
+  addWeightOnly: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.measure.create({
+        data: {
+          User: { connect: { id: ctx.session.user.id } },
+          weight: input,
+        },
+      });
+    }),
   create: protectedProcedure
     .input(CreateMeasure)
     .mutation(

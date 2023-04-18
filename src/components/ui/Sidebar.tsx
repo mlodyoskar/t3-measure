@@ -7,6 +7,8 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import { Button } from "./Button";
+import { AddWeightModal } from "../modals/AddWeightModal/AddWeightModal";
 
 const userNavigation = [
   { name: "Wyloguj się", onClick: async () => await signOut() },
@@ -30,6 +32,7 @@ export const Sidebar = ({ children }: Props) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();
+  const [isAddWeightModalOpen, setIsAddWeightModalOpen] = useState(false);
 
   return (
     <>
@@ -179,7 +182,18 @@ export const Sidebar = ({ children }: Props) => {
               <HamburgerIcon className="h-6 w-6" aria-hidden="true" />
             </button>
             <div className="flex flex-1 justify-between px-4">
-              <div className="flex flex-1"></div>
+              <div className="ml-auto flex">
+                <Button
+                  onClick={() => setIsAddWeightModalOpen(true)}
+                  className="m-auto h-10 w-10"
+                >
+                  +
+                </Button>
+                <AddWeightModal
+                  isOpen={isAddWeightModalOpen}
+                  closeHandler={() => setIsAddWeightModalOpen(false)}
+                />
+              </div>
               <div className="ml-4 flex items-center md:ml-6">
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">

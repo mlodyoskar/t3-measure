@@ -12,8 +12,8 @@ import { Controller } from "react-hook-form";
 import { Layout } from "../../components/ui/Layout";
 import { Spinner } from "../../components/ui/icons";
 
-const positiveDecimalRegex = /^(?!0)\d+(\.\d{1})?(\,\d{1})?$/;
-const MEASURE_FIELD_ERROR_MESSAGE = "Wartość musi być liczbą dodatnią";
+export const positiveDecimalRegex = /^(?!0)\d+(\.\d{1})?(\,\d{1})?$/;
+export const MEASURE_FIELD_ERROR_MESSAGE = "Wartość musi być liczbą dodatnią";
 
 export const CreateMeasure = z.object({
   date: z.date(),
